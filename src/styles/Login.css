@@ -1,8 +1,8 @@
-.main_div{
-    background-color: #F3F5F7;
+.main_div {
+  background-color: #f3f5f7;
 }
 
-.login_img{
-    min-height: 90vh;
-    max-height: 90vh;
+.login_img {
+  min-height: 100vh;
+  max-height: 100vh;
 }

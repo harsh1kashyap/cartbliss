@@ -1,28 +1,36 @@
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Ensure Toast CSS is imported
 import loginImg from "../assets/login_img_1.png";
-import '../styles/Login.css'
+import '../styles/Login.css';
 
-
-var Login = () => {
-
+const Login = () => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        axios.post('https://localhost:5001/api/UserLoginRegister/VerifyLogin', { userName: userName, password: password })
-            .then(function (response) {
-                toast.success("Logged In Successfully.");
-            })
-            .catch(function (response) {
-                console.log(response);
-            })
-    }
+        try {
+            const response = await axios.post('https://localhost:5001/api/UserLoginRegister/VerifyLogin', {
+                userName,
+                password
+            });
+
+            if (response.status === 200) {
+                toast.success("Logged in successfully!");
+            } else {
+                toast.error("Login failed. Please try again.");
+            }
+        } catch (error) {
+            toast.error("Login failed. Invalid credentials or server error.");
+            console.error("Login Error:", error.response?.data || error.message);
+        }
+    };
 
     return (
         <>
+            <ToastContainer /> {/* Ensure ToastContainer is included */}
             <div className="row vh-100 d-flex align-items-center">
                 <div className="col-md-6 main_div d-flex justify-content-center">
                     <img src={loginImg} className="login_img" alt="Login" />
@@ -41,6 +49,7 @@ var Login = () => {
                                     className="form-control"
                                     placeholder="Enter Username"
                                     required
+                                    value={userName}
                                     onChange={(e) => setUserName(e.target.value)}
                                 />
                             </div>
@@ -51,6 +60,7 @@ var Login = () => {
                                     className="form-control"
                                     placeholder="Enter password"
                                     required
+                                    value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
@@ -62,7 +72,7 @@ var Login = () => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
 export default Login;
